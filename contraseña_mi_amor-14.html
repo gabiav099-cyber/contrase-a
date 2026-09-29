@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Contraseña ❤️</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg,#dff4ff 0%,#f7fbff 100%);
+    font-family: Arial, Helvetica, sans-serif;
+    color: #14558a;
+  }
+  .card {
+    width: min(430px, 94vw);
+    min-height: 760px;
+    padding: 34px 22px 28px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: hidden;
+    position: relative;
+  }
+  .lock-wrap {
+    height: 155px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom: 4px;
+  }
+  .lock {
+    position: relative;
+    width: 92px;
+    height: 80px;
+    background: linear-gradient(145deg,#fff,#d8dde2);
+    border: 3px solid #9da5ad;
+    border-radius: 18px;
+    box-shadow: 0 8px 18px #9aa9b633, inset 0 2px 4px #ffffff;
+    transition: .55s ease;
+  }
+  .shackle {
+    position:absolute;
+    width: 52px;
+    height: 57px;
+    border: 10px solid #aeb5bb;
+    border-bottom: 0;
+    border-radius: 30px 30px 0 0;
+    left: 17px;
+    top: -43px;
+    transition: .65s ease;
+    transform-origin: 50% 100%;
+  }
+  .keyhole {
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:15px;
+    height:25px;
+    transform:translate(-50%,-35%);
+    background:#77818a;
+    border-radius:50% 50% 45% 45%;
+  }
+  .keyhole:after {
+    content:"";
+    position:absolute;
+    width:7px;
+    height:14px;
+    background:#77818a;
+    left:4px;
+    top:12px;
+  }
+  .open .shackle { transform: rotate(-35deg) translate(-6px,-4px); }
+  .open .lock { transform: translateY(3px); }
+  h1 {
+    font-size: 25px;
+    margin: 10px 0 20px;
+    color:#12619a;
+    letter-spacing:.2px;
+  }
+  .slots {
+    display:flex;
+    gap:18px;
+    justify-content:center;
+    position:relative;
+    margin-bottom: 8px;
+  }
+  .slot {
+    position:relative;
+    width:82px;
+    height:82px;
+    border-radius:13px;
+    background:#fff6a6;
+    border:4px solid #1671ad;
+    box-shadow: 0 5px 10px #497d9820;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:34px;
+    font-weight:700;
+    color:#14558a;
+  }
+  .slot.filled {
+    background:#e84b55;
+    border-color:#b92532;
+    color:#fff;
+    box-shadow:0 5px 12px #b9253240;
+  }
+  .slot.filled::after {
+    content:"♥";
+    position:absolute;
+    font-size:20px;
+    color:#fff;
+    transform:translate(25px,-24px);
+  }
+  .truck-track {
+    width:210px;
+    height:68px;
+    position:relative;
+    margin-bottom: 15px;
+  }
+  .truck {
+    position:absolute;
+    width:108px;
+    height:58px;
+    left:0;
+    top:0;
+    transition:left .5s cubic-bezier(.2,.8,.2,1);
+    filter: drop-shadow(0 5px 4px #526d7a45);
+  }
+  .truck .pickup-bed {
+    position:absolute;
+    left:2px; bottom:17px;
+    width:45px; height:22px;
+    background:linear-gradient(#ffffff,#e6ebee);
+    border:2px solid #77838b;
+    border-radius:5px 2px 2px 4px;
+  }
+  .truck .body {
+    position:absolute;
+    left:26px; bottom:13px;
+    width:61px; height:25px;
+    background:linear-gradient(#fff,#e1e6e9);
+    border:2px solid #707c84;
+    border-radius:5px 5px 4px 5px;
+  }
+  .truck .cab {
+    position:absolute;
+    right:9px; bottom:26px;
+    width:46px; height:32px;
+    background:linear-gradient(145deg,#fff,#dfe5e8);
+    border:2px solid #707c84;
+    border-radius:10px 9px 3px 3px;
+  }
+  .truck .window, .truck .window2 {
+    position:absolute;
+    top:4px;
+    height:14px;
+    background:linear-gradient(135deg,#b8dceb,#e3f5fb);
+    border:1px solid #66747c;
+    border-radius:3px;
+  }
+  .truck .window { left:4px; width:17px; }
+  .truck .window2 { right:4px; width:17px; }
+  .truck .hood {
+    position:absolute;
+    right:0; bottom:17px;
+    width:19px; height:18px;
+    background:linear-gradient(#fff,#e1e6e9);
+    border:2px solid #707c84;
+    border-left:0;
+    border-radius:0 5px 4px 0;
+  }
+  .truck .headlight {
+    position:absolute;
+    right:0px; bottom:27px;
+    width:5px; height:8px;
+    background:#fff8bd;
+    border:1px solid #9a8e55;
+    border-radius:2px;
+    z-index:3;
+  }
+  .truck .bumper {
+    position:absolute;
+    right:-2px; bottom:13px;
+    width:13px; height:5px;
+    background:#68757d;
+    border-radius:2px;
+  }
+  .truck .wheel {
+    position:absolute; bottom:3px;
+    width:19px; height:19px;
+    border-radius:50%;
+    background:#1f2427;
+    border:3px solid #657077;
+    box-shadow:inset 0 0 0 3px #30383d;
+    z-index:4;
+  }
+  .truck .w1 { left:15px; }
+  .truck .w2 { right:17px; }
+  .track-line {
+    position:absolute;
+    bottom:4px; left:7px; right:7px;
+    height:3px; border-radius:3px;
+    background:#7ca5bb55;
+  }
+  .keypad {
+    width: 300px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+    margin-top:4px;
+  }
+  button.key {
+    height:70px;
+    border:0;
+    border-radius:13px;
+    background:#1165a6;
+    color:#fff6a6;
+    font-size:31px;
+    font-weight:700;
+    box-shadow:0 5px 0 #0b4d80;
+    cursor:pointer;
+    touch-action:manipulation;
+  }
+  button.key:active {
+    transform:translateY(4px);
+    box-shadow:0 1px 0 #0b4d80;
+  }
+  .message {
+    min-height:45px;
+    margin-top:11px;
+    font-size:19px;
+    font-weight:700;
+    opacity:0;
+    transition:.25s;
+  }
+  .message.show { opacity:1; }
+  .error { color:#c44343; }
+  .success { color:#17834d; }
+  .shake { animation:shake .35s; }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-7px)}
+    75%{transform:translateX(7px)}
+  }
+  .success-box {
+    display:none;
+    margin-top:10px;
+    padding:15px 20px;
+    border-radius:18px;
+    background:#ffffffcc;
+    box-shadow:0 8px 25px #6b94aa22;
+  }
+  .success-box.show { display:block; animation:pop .5s ease; }
+  .success-box .heart { font-size:34px; }
+  .success-box strong { display:block; font-size:25px; color:#12619a; margin-top:5px; }
+  @keyframes pop {
+    0%{transform:scale(.7);opacity:0}
+    100%{transform:scale(1);opacity:1}
+  }
+  .reset {
+    margin-top:13px;
+    border:0;
+    background:transparent;
+    color:#52758b;
+    text-decoration:underline;
+    font-size:14px;
+    cursor:pointer;
+  }
+  @media (max-height:700px) {
+    .card{min-height:auto;padding-top:18px}
+    .lock-wrap{height:115px}
+    .key{height:58px!important}
+  }
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="lock-wrap">
+    <div class="lock" id="lock">
+      <div class="shackle"></div>
+      <div class="keyhole"></div>
+    </div>
+  </div>
+
+  <h1>PISTA: FECHA ESPECIAL</h1>
+
+  <div class="slots" id="slots">
+    <div class="slot" id="slot0"></div>
+    <div class="slot" id="slot1"></div>
+  </div>
+
+  <div class="truck-track">
+    <div class="truck" id="truck" aria-label="camioneta blanca">
+      <div class="pickup-bed"></div>
+      <div class="body"></div>
+      <div class="cab">
+        <div class="window"></div>
+        <div class="window2"></div>
+      </div>
+      <div class="hood"></div>
+      <div class="headlight"></div>
+      <div class="bumper"></div>
+      <div class="wheel w1"></div>
+      <div class="wheel w2"></div>
+    </div>
+    <div class="track-line"></div>
+  </div>
+
+  <div class="keypad">
+    <button class="key" data-n="1">1</button>
+    <button class="key" data-n="2">2</button>
+    <button class="key" data-n="3">3</button>
+    <button class="key" data-n="4">4</button>
+    <button class="key" data-n="5">5</button>
+    <button class="key" data-n="6">6</button>
+    <button class="key" data-n="7">7</button>
+    <button class="key" data-n="8">8</button>
+    <button class="key" data-n="9">9</button>
+    <span></span>
+    <button class="key" data-n="0">0</button>
+    <span></span>
+  </div>
+
+  <div class="message" id="message"></div>
+
+  <div class="success-box" id="success">
+    <div class="heart">❤️</div>
+    <strong>Muy bien, mi amor</strong>
+  </div>
+
+  <button class="reset" id="reset">Volver a intentar</button>
+</main>
+
+<script>
+const PASSWORD = "16";
+let entered = "";
+
+const slots = [document.getElementById("slot0"), document.getElementById("slot1")];
+const truck = document.getElementById("truck");
+const lock = document.getElementById("lock");
+const message = document.getElementById("message");
+const success = document.getElementById("success");
+const slotsBox = document.getElementById("slots");
+
+function updateTruck() {
+  // Primer dígito: debajo del primer cuadro. Segundo: debajo del segundo.
+  truck.style.left = entered.length === 0 ? "0px" : "105px";
+}
+
+function clearMessage() {
+  message.textContent = "";
+  message.className = "message";
+}
+
+document.querySelectorAll(".key").forEach(btn => {
+  btn.addEventListener("click", () => {
+    if (entered.length >= 2 || success.classList.contains("show")) return;
+
+    const n = btn.dataset.n;
+    const expected = PASSWORD[entered.length];
+
+    if (n !== expected) {
+      message.textContent = "Ese número no es correcto 💕";
+      message.className = "message show error";
+      slotsBox.classList.remove("shake");
+      void slotsBox.offsetWidth;
+      slotsBox.classList.add("shake");
+      return;
+    }
+
+    entered += n;
+    slots[entered.length - 1].textContent = n;
+    slots[entered.length - 1].classList.add("filled");
+    updateTruck();
+    clearMessage();
+
+    if (entered === PASSWORD) {
+      setTimeout(() => {
+        lock.classList.add("open");
+        message.textContent = "Código correcto ✨";
+        message.className = "message show success";
+        success.classList.add("show");
+      }, 450);
+    }
+  });
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  entered = "";
+  slots.forEach(s => { s.textContent=""; s.classList.remove("filled"); });
+  truck.style.left = "0px";
+  lock.classList.remove("open");
+  success.classList.remove("show");
+  clearMessage();
+});
+</script>
+</body>
+</html>
